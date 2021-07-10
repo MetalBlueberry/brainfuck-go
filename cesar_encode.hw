@@ -1,0 +1,38 @@
+# Setup
+,  read encoding c0
+
+# substract 48 from encoding because "0" == 48
+> ++++ ++++  # store 6 on c1
+[
+  < --- ---  # substract 6 from c2
+  > -        # substract 1 from c1
+]    	     # end if c1  == 0
+
+goto c0
+<
+
+>>> goto c3
+, read
+[
+  <<< goto c0
+
+  # COPY c0 to c2
+    move c0 to c1 copy to  c2
+    [ >+ >+ <<- ]
+    goto c1
+    >
+    move c1 to c0
+    [ <+ >- ] 
+    goto c0
+    <
+
+
+  goto c2
+  >>
+
+  [->+<]       # add c2 to c3
+  goto c3
+  > 
+  .          # print  c3
+  , read next
+]
