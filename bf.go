@@ -53,8 +53,18 @@ const data_size int = 65535
 func Compile(input string) (program []Instruction, err error) {
 	var pc, jmp_pc uint16 = 0, 0
 	jmp_stack := make([]uint16, 0)
+	comment := false
 	for _, c := range input {
+		if comment && c != '\n' {
+			continue
+		}
 		switch c {
+		case '\n':
+			comment = false
+			pc--
+		case '#':
+			comment = true
+			pc--
 		case '>':
 			program = append(program, Instruction{op_inc_dp, 0})
 		case '<':
@@ -93,6 +103,7 @@ type Executor struct {
 	MaxIterations int
 	reader        ByteReader
 	writer        io.Writer
+	Debug         bool
 }
 
 type ByteReader interface {
@@ -118,8 +129,11 @@ func (e *Executor) Execute(program []Instruction) error {
 		case op_dec_val:
 			data[ptr]--
 		case op_out:
-			fmt.Printf("%c - %d\n", data[ptr], data[ptr])
-			fmt.Fprintf(e.writer, "%c", data[ptr])
+			if e.Debug {
+				fmt.Printf("%c - %d - %d\n", data[ptr], data[ptr], ptr-uint16(data_size)/2)
+			} else {
+				fmt.Fprintf(e.writer, "%c", data[ptr])
+			}
 		case op_in:
 			readVal, err := e.reader.ReadByte()
 			switch {
@@ -165,6 +179,7 @@ func main() {
 		return
 	}
 	exe := Executor{
+		Debug:         true,
 		MaxIterations: *maxSteps,
 		reader:        bufio.NewReader(os.Stdin),
 		writer:        os.Stdout,

@@ -38,6 +38,16 @@ func Test_CesarEncode(t *testing.T) {
 			input:  "3xyz",
 			output: "abc",
 		},
+		{
+			name:   "hello world no modified",
+			input:  "0hello world",
+			output: "hello world",
+		},
+		{
+			name:   "hello world encrypted",
+			input:  "1hello world",
+			output: "ifmmp xpsme",
+		},
 	}
 
 	fileContents, err := ioutil.ReadFile("cesar_encode.hw")
