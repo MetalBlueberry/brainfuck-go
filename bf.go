@@ -50,7 +50,7 @@ const (
 
 const data_size int = 65535
 
-func compile_bf(input string) (program []Instruction, err error) {
+func Compile(input string) (program []Instruction, err error) {
 	var pc, jmp_pc uint16 = 0, 0
 	jmp_stack := make([]uint16, 0)
 	for _, c := range input {
@@ -91,12 +91,17 @@ func compile_bf(input string) (program []Instruction, err error) {
 
 type Executor struct {
 	MaxIterations int
+	reader        ByteReader
+	writer        io.Writer
+}
+
+type ByteReader interface {
+	ReadByte() (byte, error)
 }
 
 func (e *Executor) Execute(program []Instruction) error {
 	data := make([]int16, data_size)
 	var ptr uint16 = uint16(data_size) / 2
-	reader := bufio.NewReader(os.Stdin)
 	steps := 0
 	for pc := 0; pc < len(program); pc++ {
 		steps++
@@ -114,8 +119,9 @@ func (e *Executor) Execute(program []Instruction) error {
 			data[ptr]--
 		case op_out:
 			fmt.Printf("%c - %d\n", data[ptr], data[ptr])
+			fmt.Fprintf(e.writer, "%c", data[ptr])
 		case op_in:
-			readVal, err := reader.ReadByte()
+			readVal, err := e.reader.ReadByte()
 			switch {
 			case err == io.EOF:
 				data[ptr] = int16(0)
@@ -153,13 +159,15 @@ func main() {
 		fmt.Printf("Error reading %s\n", filename)
 		return
 	}
-	program, err := compile_bf(string(fileContents))
+	program, err := Compile(string(fileContents))
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 	exe := Executor{
 		MaxIterations: *maxSteps,
+		reader:        bufio.NewReader(os.Stdin),
+		writer:        os.Stdout,
 	}
 	fmt.Printf("Starting\n")
 	err = exe.Execute(program)
