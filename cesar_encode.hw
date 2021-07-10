@@ -1,5 +1,5 @@
 # Setup
-,  read encoding c0
+,  read encoding c0 it will remain here for ever
 
 # substract 48 from encoding because "0" == 48
 > ++++ ++++  # store 6 on c1
@@ -16,7 +16,7 @@ goto c0
 [
   <<< goto c0
 
-  # COPY c0 to c2
+  # COPY c0 to c2 / backup encoding
     move c0 to c1 copy to  c2
     [ >+ >+ <<- ]
     goto c1
@@ -33,6 +33,20 @@ goto c0
   [->+<]       # add c2 to c3
   goto c3
   > 
-  .          # print  c3
+
+  ## Substract 97 from c3
+    -------------------------------------------------------------------------------------------------
+    ## Clear area for division
+    >[-] >[-] >[-] >[-] >[-]
+    <    <    <    <    <
+    ## Divide by 25
+    >>>>+++++ +++++ +++++ +++++ +++++ +<<<<                         
+    [->+>>+>-[<-]<[<<[->>>+<<<]>>>>+<<-<]<<] division
+    # .
+    >[<+>-]< # Move to c3
+ 
+    +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  # print  c3
+    .
   , read next
 ]
