@@ -95,7 +95,7 @@ func Test_CesarError(t *testing.T) {
 		{
 			name:   "Invalid first character",
 			input:  "x01bcd",
-			output: "First character must be either \"e\" for encode or \"d\" for decode",
+			output: "First character must be either \"e\" for encode or \"d\" for decode\n2nd and 3rd chars must be alphanumeric characters indicating the password",
 		},
 	}
 
@@ -113,7 +113,7 @@ func ExecuteScenario(t *testing.T, scenarios []scenario) {
 			reader := strings.NewReader(s.input)
 			writer := &bytes.Buffer{}
 			exe := bf.Executor{
-				MaxSteps: 100000,
+				MaxSteps: 1000000,
 				Reader:   reader,
 				Writer:   writer,
 			}
