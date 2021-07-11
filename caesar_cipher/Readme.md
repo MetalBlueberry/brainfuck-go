@@ -10,13 +10,13 @@ the quick brown fox jumps over the lazy dog
 ### Encode
 
 ```sh
-$ echo -n "07 hello world" | bf caesar_encode.hw  
+$ echo -n "e07 hello world" | bf caesar.bf
  olssv dvysk
 ```
 
 ### Decode
 
 ```sh
-$ echo -n "07 olssv dvysk" | bf caesar_decode.hw  
+$ echo -n "d07 olssv dvysk" | bf caesar.bf
  hello wolrd
 ```

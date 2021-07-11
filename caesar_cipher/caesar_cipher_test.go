@@ -2,7 +2,6 @@ package caesarcipher_test
 
 import (
 	"bytes"
-	"fmt"
 	"io/ioutil"
 	"strings"
 	"testing"
@@ -21,41 +20,39 @@ func Test_CesarEncode(t *testing.T) {
 	scenarios := []scenario{
 		{
 			name:   "01step",
-			input:  "01abc",
+			input:  "e01abc",
 			output: "bcd",
 		},
 		{
 			name:   "1 step from different start position",
-			input:  "01mno",
+			input:  "e01mno",
 			output: "nop",
 		},
 		{
 			name:   "5 steps",
-			input:  "05abc",
+			input:  "e05abc",
 			output: "fgh",
 		},
 		{
 			name:   "wrap",
-			input:  "03xyz",
+			input:  "e03xyz",
 			output: "abc",
 		},
 		{
 			name:   "hello world no modified",
-			input:  "00hello world",
+			input:  "e00hello world",
 			output: "hello world",
 		},
 		{
 			name:   "hello world encrypted",
-			input:  "01hello world",
+			input:  "e01hello world",
 			output: "ifmmp xpsme",
 		},
 	}
 
-	fileContents, err := ioutil.ReadFile("cesar_encode.hw")
-	if err != nil {
-		fmt.Printf("Error reading %s\n", "cesar_encode.hw")
-		return
-	}
+	fileContents, err := ioutil.ReadFile("caesar.bf")
+	require.NoError(t, err)
+
 	program, err := bf.Compile(string(fileContents))
 	require.NoError(t, err)
 
@@ -80,41 +77,38 @@ func Test_CesarDecode(t *testing.T) {
 	scenarios := []scenario{
 		{
 			name:   "01step",
-			input:  "01bcd",
+			input:  "d01bcd",
 			output: "abc",
 		},
 		{
 			name:   "1 step from different start position",
-			input:  "01nop",
+			input:  "d01nop",
 			output: "mno",
 		},
 		{
 			name:   "5 steps",
-			input:  "05fgh",
+			input:  "d05fgh",
 			output: "abc",
 		},
 		{
 			name:   "wrap",
-			input:  "03abc",
+			input:  "d03abc",
 			output: "xyz",
 		},
 		{
 			name:   "hello world no modified",
-			input:  "00hello world",
+			input:  "d00hello world",
 			output: "hello world",
 		},
 		{
 			name:   "hello world encrypted",
-			input:  "01ifmmp xpsme",
+			input:  "d01ifmmp xpsme",
 			output: "hello world",
 		},
 	}
 
-	fileContents, err := ioutil.ReadFile("cesar_decode.hw")
-	if err != nil {
-		fmt.Printf("Error reading %s\n", "cesar_decode.hw")
-		return
-	}
+	fileContents, err := ioutil.ReadFile("caesar.bf")
+	require.NoError(t, err)
 	program, err := bf.Compile(string(fileContents))
 	require.NoError(t, err)
 
