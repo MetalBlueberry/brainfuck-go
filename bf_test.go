@@ -19,33 +19,33 @@ type scenario struct {
 func Test_CesarEncode(t *testing.T) {
 	scenarios := []scenario{
 		{
-			name:   "1 step",
-			input:  "1abc",
+			name:   "01step",
+			input:  "01abc",
 			output: "bcd",
 		},
 		{
 			name:   "1 step from different start position",
-			input:  "1mno",
+			input:  "01mno",
 			output: "nop",
 		},
 		{
 			name:   "5 steps",
-			input:  "5abc",
+			input:  "05abc",
 			output: "fgh",
 		},
 		{
 			name:   "wrap",
-			input:  "3xyz",
+			input:  "03xyz",
 			output: "abc",
 		},
 		{
 			name:   "hello world no modified",
-			input:  "0hello world",
+			input:  "00hello world",
 			output: "hello world",
 		},
 		{
 			name:   "hello world encrypted",
-			input:  "1hello world",
+			input:  "01hello world",
 			output: "ifmmp xpsme",
 		},
 	}
