@@ -1,0 +1,78 @@
+# Read first two digits
+
+1st
+,
+# Substract 48
+>+++++ ++++[<----->-]<--- 
+
+>
+2nd
+,
+# Substract 48
+>+++++ ++++[<----->-]<--- 
+
+## Add teens
+<[>+++++ +++++<-]>
+
+## Move to c0
+[<+>-]<
+
+>>> goto c3
+, read first character
+[
+  >+< c4 if flag
+
+  if c3 == 32 == " "
+  # Substract 32
+  <++++++[>-----<-]>--
+  [
+    >[-]< clear c4
+    #restore original value
+    # Add 32
+    <++++++[>+++++<-]>++
+    <<< goto c0
+
+    # COPY c0 to c2 / backup encoding
+      move c0 to c1 copy to  c2
+      [ >+ >+ <<- ]
+      goto c1
+      >
+      move c1 to c0
+      [ <+ >- ] 
+      goto c0
+      <
+    goto c2
+    >>
+
+    [->-<]       # substract c2 to c3
+    goto c3
+    > 
+
+    ## Substract 97 from c3
+      -------------------------------------------------------------------------------------------------
+      ## Clear area for division
+      >[-] >[-] >[-] >[-] >[-]
+      <    <    <    <    <
+
+      
+      ## add 26 to handle negative wraps
+      +++++ +++++ +++++ +++++ +++++ +
+      ## Divide by 26
+      >>>>+++++ +++++ +++++ +++++ +++++ +<<<<
+      ?
+      [->+>>+>-[<-]<[<<[->>>+<<<]>>>>+<<-<]<<] division
+      ?
+      >[<+>-]< # Move to c3
+ 
+      +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    # print  c3
+      .
+      [-]
+  ]>[<
+    # Add 32
+    <++++++[>+++++<-]>++
+    . just print it 32
+    [-]>[-]< clear c3 and c4 
+  >]<
+  , read next
+]

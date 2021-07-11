@@ -24,6 +24,7 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"errors"
 	"flag"
 	"fmt"
@@ -163,6 +164,7 @@ func (e *Executor) Execute(program []Instruction) error {
 			}
 		case op_debug:
 			if e.Debug {
+				fmt.Printf("step: %d\n", steps)
 				fmt.Printf("position [")
 				for i := min; i <= max; i++ {
 					if ptr == i {
@@ -192,7 +194,7 @@ func (e *Executor) Execute(program []Instruction) error {
 }
 
 func main() {
-	maxSteps := flag.Int("max-steps", 10000, "limit the number of interations")
+	maxSteps := flag.Int("max-steps", 100000, "limit the number of interations")
 
 	args := os.Args
 	if len(args) != 2 {
@@ -210,15 +212,17 @@ func main() {
 		fmt.Println(err)
 		return
 	}
+	buf := &bytes.Buffer{}
 	exe := Executor{
 		Debug:         true,
 		MaxIterations: *maxSteps,
 		reader:        bufio.NewReader(os.Stdin),
-		writer:        os.Stdout,
+		writer:        buf,
 	}
 	fmt.Printf("Starting\n")
 	err = exe.Execute(program)
 	if err != nil {
 		fmt.Print(err)
 	}
+	fmt.Print(buf.String())
 }

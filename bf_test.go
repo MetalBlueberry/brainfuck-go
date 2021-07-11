@@ -74,3 +74,62 @@ func Test_CesarEncode(t *testing.T) {
 		})
 	}
 }
+
+func Test_CesarDecode(t *testing.T) {
+	scenarios := []scenario{
+		{
+			name:   "01step",
+			input:  "01bcd",
+			output: "abc",
+		},
+		{
+			name:   "1 step from different start position",
+			input:  "01nop",
+			output: "mno",
+		},
+		{
+			name:   "5 steps",
+			input:  "05fgh",
+			output: "abc",
+		},
+		{
+			name:   "wrap",
+			input:  "03abc",
+			output: "xyz",
+		},
+		{
+			name:   "hello world no modified",
+			input:  "00hello world",
+			output: "hello world",
+		},
+		{
+			name:   "hello world encrypted",
+			input:  "01ifmmp xpsme",
+			output: "hello world",
+		},
+	}
+
+	fileContents, err := ioutil.ReadFile("cesar_decode.hw")
+	if err != nil {
+		fmt.Printf("Error reading %s\n", "cesar_decode.hw")
+		return
+	}
+	program, err := Compile(string(fileContents))
+	require.NoError(t, err)
+
+	for _, s := range scenarios {
+		t.Run(s.name, func(t *testing.T) {
+			reader := strings.NewReader(s.input)
+			writer := &bytes.Buffer{}
+			exe := Executor{
+				MaxIterations: 100000,
+				reader:        reader,
+				writer:        writer,
+			}
+			err := exe.Execute(program)
+			require.NoError(t, err)
+
+			require.Equal(t, s.output, writer.String())
+		})
+	}
+}
