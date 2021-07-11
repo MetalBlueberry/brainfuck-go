@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	maxSteps := flag.Int("max-steps", 100000, "limit the number of interations")
+	maxSteps := flag.Int("max-steps", 1000000, "limit the number of interations")
 	debug := flag.Bool("debug", false, "enable debug output with the character ?")
 	flag.Parse()
 

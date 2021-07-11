@@ -50,27 +50,7 @@ func Test_CesarEncode(t *testing.T) {
 		},
 	}
 
-	fileContents, err := ioutil.ReadFile("caesar.bf")
-	require.NoError(t, err)
-
-	program, err := bf.Compile(string(fileContents))
-	require.NoError(t, err)
-
-	for _, s := range scenarios {
-		t.Run(s.name, func(t *testing.T) {
-			reader := strings.NewReader(s.input)
-			writer := &bytes.Buffer{}
-			exe := bf.Executor{
-				MaxSteps: 100000,
-				Reader:   reader,
-				Writer:   writer,
-			}
-			err := exe.Execute(program)
-			require.NoError(t, err)
-
-			require.Equal(t, s.output, writer.String())
-		})
-	}
+	ExecuteScenario(t, scenarios)
 }
 
 func Test_CesarDecode(t *testing.T) {
@@ -107,6 +87,22 @@ func Test_CesarDecode(t *testing.T) {
 		},
 	}
 
+	ExecuteScenario(t, scenarios)
+}
+
+func Test_CesarError(t *testing.T) {
+	scenarios := []scenario{
+		{
+			name:   "Invalid first character",
+			input:  "x01bcd",
+			output: "First character must be either \"e\" for encode or \"d\" for decode",
+		},
+	}
+
+	ExecuteScenario(t, scenarios)
+}
+
+func ExecuteScenario(t *testing.T, scenarios []scenario) {
 	fileContents, err := ioutil.ReadFile("caesar.bf")
 	require.NoError(t, err)
 	program, err := bf.Compile(string(fileContents))
