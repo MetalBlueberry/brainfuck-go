@@ -46,6 +46,7 @@ const (
 	op_in
 	op_jmp_fwd
 	op_jmp_bck
+	op_debug
 )
 
 const data_size int = 65535
@@ -88,6 +89,8 @@ func Compile(input string) (program []Instruction, err error) {
 			jmp_stack = jmp_stack[:len(jmp_stack)-1]
 			program = append(program, Instruction{op_jmp_bck, jmp_pc})
 			program[jmp_pc].operand = pc
+		case '?':
+			program = append(program, Instruction{op_debug, 0})
 		default:
 			pc--
 		}
@@ -113,6 +116,10 @@ type ByteReader interface {
 func (e *Executor) Execute(program []Instruction) error {
 	data := make([]int16, data_size)
 	var ptr uint16 = uint16(data_size) / 2
+
+	max := ptr
+	min := ptr
+
 	steps := 0
 	for pc := 0; pc < len(program); pc++ {
 		steps++
@@ -122,18 +129,20 @@ func (e *Executor) Execute(program []Instruction) error {
 		switch program[pc].operator {
 		case op_inc_dp:
 			ptr++
+			if max < ptr {
+				max = ptr
+			}
 		case op_dec_dp:
 			ptr--
+			if min > ptr {
+				min = ptr
+			}
 		case op_inc_val:
 			data[ptr]++
 		case op_dec_val:
 			data[ptr]--
 		case op_out:
-			if e.Debug {
-				fmt.Printf("%c - %d - %d\n", data[ptr], data[ptr], int(ptr)-int(data_size)/2)
-			} else {
-				fmt.Fprintf(e.writer, "%c", data[ptr])
-			}
+			fmt.Fprintf(e.writer, "%c", data[ptr])
 		case op_in:
 			readVal, err := e.reader.ReadByte()
 			switch {
@@ -152,6 +161,29 @@ func (e *Executor) Execute(program []Instruction) error {
 			if data[ptr] > 0 {
 				pc = int(program[pc].operand)
 			}
+		case op_debug:
+			if e.Debug {
+				fmt.Printf("position [")
+				for i := min; i <= max; i++ {
+					if ptr == i {
+						fmt.Print("  >+ ")
+					} else {
+						fmt.Print("     ")
+					}
+				}
+				fmt.Printf("]\n")
+				fmt.Printf("index    [")
+				for i := min; i <= max; i++ {
+					fmt.Printf(" %3d ", i-uint16(data_size)/2)
+				}
+				fmt.Printf("]\n")
+				fmt.Printf("values   [")
+				for i := min; i <= max; i++ {
+					fmt.Printf(" %3d ", data[i])
+				}
+				fmt.Printf("]\n")
+			}
+
 		default:
 			panic("Unknown operator.")
 		}
