@@ -20,7 +20,7 @@
 >>> goto c3
 , read first character
 [
-  >+< c4 if flag
+  >+< # c4 if flag
 
   if c3 == 32 == " "
   # Substract 32
@@ -53,21 +53,24 @@
       ## Clear area for division
       >[-] >[-] >[-] >[-] >[-]
       <    <    <    <    <
-      ## Divide by 25
+      
+      ## add 26 to handle negative wraps
+      +++++ +++++ +++++ +++++ +++++ +
+
+      ## Divide by 26
       >>>>+++++ +++++ +++++ +++++ +++++ +<<<<
       [->+>>+>-[<-]<[<<[->>>+<<<]>>>>+<<-<]<<] division
-      # .
       >[<+>-]< # Move to c3
  
       +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    # print  c3
+      # print  c3
       .
       [-]
   ]>[<
     # Add 32
     <++++++[>+++++<-]>++
-    . just print it 32
-    [-]>[-]< clear c3 and c4 
+    . # just print it 32
+    [-]>[-]< # clear c3 and c4 
   >]<
   , read next
 ]
