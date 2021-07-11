@@ -130,7 +130,7 @@ func (e *Executor) Execute(program []Instruction) error {
 			data[ptr]--
 		case op_out:
 			if e.Debug {
-				fmt.Printf("%c - %d - %d\n", data[ptr], data[ptr], ptr-uint16(data_size)/2)
+				fmt.Printf("%c - %d - %d\n", data[ptr], data[ptr], int(ptr)-int(data_size)/2)
 			} else {
 				fmt.Fprintf(e.writer, "%c", data[ptr])
 			}
