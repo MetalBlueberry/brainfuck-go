@@ -100,9 +100,9 @@ func Compile(input string) (program []Instruction, err error) {
 
 type Executor struct {
 	MaxSteps int
-	Reader        ByteReader
-	Writer        io.Writer
-	Debug         bool
+	Reader   ByteReader
+	Writer   io.Writer
+	Debug    bool
 }
 
 type ByteReader interface {
@@ -171,7 +171,7 @@ func (e *Executor) Execute(program []Instruction) error {
 				fmt.Printf("]\n")
 				fmt.Printf("index    [")
 				for i := min; i <= max; i++ {
-					fmt.Printf(" %3d ", i-uint16(data_size)/2)
+					fmt.Printf(" %3d ", int(i)-int(data_size)/2)
 				}
 				fmt.Printf("]\n")
 				fmt.Printf("values   [")
