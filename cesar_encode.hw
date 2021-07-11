@@ -1,15 +1,21 @@
-# Setup
-,  read encoding c0 it will remain here for ever
+# Read first two digits
 
-# substract 48 from encoding because "0" == 48
-> ++++ ++++  # store 6 on c1
-[
-  < --- ---  # substract 6 from c2
-  > -        # substract 1 from c1
-]    	     # end if c1  == 0
+1st
+,
+# Substract 48
+>+++++ ++++[<----->-]<--- 
 
-goto c0
-<
+>
+2nd
+,
+# Substract 48
+>+++++ ++++[<----->-]<--- 
+
+## Add teens
+<[>+++++ +++++<-]>
+
+## Move to c0
+[<+>-]<
 
 >>> goto c3
 , read first character
