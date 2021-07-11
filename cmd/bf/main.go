@@ -14,14 +14,14 @@ import (
 func main() {
 	maxSteps := flag.Int("max-steps", 100000, "limit the number of interations")
 	debug := flag.Bool("debug", false, "enable debug output with the character ?")
+	flag.Parse()
 
-	args := os.Args
-	if len(args) != 2 {
-		fmt.Printf("Usage: %s filename\n", args[0])
+	filename := flag.Arg(0)
+	if filename == "" {
+		flag.PrintDefaults()
 		os.Exit(1)
-		return
 	}
-	filename := args[1]
+
 	fileContents, err := ioutil.ReadFile(filename)
 	if err != nil {
 		fmt.Printf("Error reading %s\n", filename)
