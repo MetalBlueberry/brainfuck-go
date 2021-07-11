@@ -1,5 +1,5 @@
 # detect operation mode
-,
+>,
 # Substract 100 == d
 >+++++ +++++[<----- ----->-]<
 
