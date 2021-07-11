@@ -95,7 +95,7 @@ func Test_CesarError(t *testing.T) {
 		{
 			name:   "Invalid first character",
 			input:  "x01bcd",
-			output: "First character must be either \"e\" for encode or \"d\" for decode\n2nd and 3rd chars must be alphanumeric characters indicating the password",
+			output: "First character must be either \"e\" for encode or \"d\" for decode\n2nd and 3rd chars must be alphanumeric characters indicating the password\nnext characters are the msg",
 		},
 	}
 
