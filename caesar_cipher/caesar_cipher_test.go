@@ -1,4 +1,4 @@
-package main
+package caesarcipher_test
 
 import (
 	"bytes"
@@ -7,6 +7,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/kgabis/brainfuck-go/pkg/bf"
 	"github.com/stretchr/testify/require"
 )
 
@@ -55,17 +56,17 @@ func Test_CesarEncode(t *testing.T) {
 		fmt.Printf("Error reading %s\n", "cesar_encode.hw")
 		return
 	}
-	program, err := Compile(string(fileContents))
+	program, err := bf.Compile(string(fileContents))
 	require.NoError(t, err)
 
 	for _, s := range scenarios {
 		t.Run(s.name, func(t *testing.T) {
 			reader := strings.NewReader(s.input)
 			writer := &bytes.Buffer{}
-			exe := Executor{
-				MaxIterations: 10000,
-				reader:        reader,
-				writer:        writer,
+			exe := bf.Executor{
+				MaxSteps: 100000,
+				Reader:   reader,
+				Writer:   writer,
 			}
 			err := exe.Execute(program)
 			require.NoError(t, err)
@@ -114,17 +115,17 @@ func Test_CesarDecode(t *testing.T) {
 		fmt.Printf("Error reading %s\n", "cesar_decode.hw")
 		return
 	}
-	program, err := Compile(string(fileContents))
+	program, err := bf.Compile(string(fileContents))
 	require.NoError(t, err)
 
 	for _, s := range scenarios {
 		t.Run(s.name, func(t *testing.T) {
 			reader := strings.NewReader(s.input)
 			writer := &bytes.Buffer{}
-			exe := Executor{
-				MaxIterations: 100000,
-				reader:        reader,
-				writer:        writer,
+			exe := bf.Executor{
+				MaxSteps: 100000,
+				Reader:   reader,
+				Writer:   writer,
 			}
 			err := exe.Execute(program)
 			require.NoError(t, err)

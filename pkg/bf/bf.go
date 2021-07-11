@@ -20,17 +20,12 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
 */
-package main
+package bf
 
 import (
-	"bufio"
-	"bytes"
 	"errors"
-	"flag"
 	"fmt"
 	"io"
-	"io/ioutil"
-	"os"
 )
 
 type Instruction struct {
@@ -104,9 +99,9 @@ func Compile(input string) (program []Instruction, err error) {
 }
 
 type Executor struct {
-	MaxIterations int
-	reader        ByteReader
-	writer        io.Writer
+	MaxSteps int
+	Reader        ByteReader
+	Writer        io.Writer
 	Debug         bool
 }
 
@@ -124,7 +119,7 @@ func (e *Executor) Execute(program []Instruction) error {
 	steps := 0
 	for pc := 0; pc < len(program); pc++ {
 		steps++
-		if steps > e.MaxIterations {
+		if steps > e.MaxSteps {
 			return errors.New("Max iterations reached")
 		}
 		switch program[pc].operator {
@@ -143,9 +138,9 @@ func (e *Executor) Execute(program []Instruction) error {
 		case op_dec_val:
 			data[ptr]--
 		case op_out:
-			fmt.Fprintf(e.writer, "%c", data[ptr])
+			fmt.Fprintf(e.Writer, "%c", data[ptr])
 		case op_in:
-			readVal, err := e.reader.ReadByte()
+			readVal, err := e.Reader.ReadByte()
 			switch {
 			case err == io.EOF:
 				data[ptr] = int16(0)
@@ -191,38 +186,4 @@ func (e *Executor) Execute(program []Instruction) error {
 		}
 	}
 	return nil
-}
-
-func main() {
-	maxSteps := flag.Int("max-steps", 100000, "limit the number of interations")
-
-	args := os.Args
-	if len(args) != 2 {
-		fmt.Printf("Usage: %s filename\n", args[0])
-		return
-	}
-	filename := args[1]
-	fileContents, err := ioutil.ReadFile(filename)
-	if err != nil {
-		fmt.Printf("Error reading %s\n", filename)
-		return
-	}
-	program, err := Compile(string(fileContents))
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	buf := &bytes.Buffer{}
-	exe := Executor{
-		Debug:         true,
-		MaxIterations: *maxSteps,
-		reader:        bufio.NewReader(os.Stdin),
-		writer:        buf,
-	}
-	fmt.Printf("Starting\n")
-	err = exe.Execute(program)
-	if err != nil {
-		fmt.Print(err)
-	}
-	fmt.Print(buf.String())
 }
